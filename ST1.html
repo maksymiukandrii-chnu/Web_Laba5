@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <meta name="Author" content="Андрій Максимюк">
+    <title>Компанія "Комп’ютерні аксесуари"</title>
+    <style>
+        /* Базові стилі сторінки */
+        body {
+            background-color: #f4f4f9;
+            font-family: Arial, Tahoma, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Шрифти */
+        .font-fantasy-demo {
+            font-family: fantasy;
+            font-weight: 200;
+            font-size: 15px;
+            font-stretch: expanded;
+        }
+
+        .font-tahoma-demo {
+            font-family: Tahoma, sans-serif;
+            font-weight: bold;
+            font-style: normal;
+            font-variant: small-caps;
+            font-stretch: normal;
+        }
+
+        .font-courier-demo {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-stretch: condensed;
+        }
+
+        .font-impact-demo {
+            font-family: Impact, sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .font-gillsans-demo {
+            font-family: 'Gill Sans', sans-serif;
+            font: caption;
+            font-variant: small-caps;
+        }
+
+        /* Текст */
+        .text-variant10-note {
+            text-align: right;
+            text-decoration: underline;
+            word-spacing: 3px;
+            letter-spacing: 0.5px;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+
+        header h1 {
+            text-shadow: #1a252f 2px 2px 4px;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* Пристрої */
+        @page {
+            size: auto;
+            marks: cross;
+        }
+
+        @media print {
+            section {
+                page: auto;
+            }
+            fieldset {
+                page-break-inside: avoid;
+            }
+            p {
+                widows: 3;
+                orphans: 3;
+            }
+        }
+
+        /* Звук */
+        @media speech {
+            .silent-block {
+                volume: silent;
+            }
+            form {
+                volume: soft;
+                pause-before: 250ms;
+                play-during: url("ambient.wav") mix repeat;
+                cue-after: url("done.wav");
+                cue: url("start.wav") url("end.wav");
+                azimuth: center-right;
+                elevation: higher;
+                speech-rate: slow;
+                voice-family: female, ukrainian;
+                stress: 55;
+                pitch-range: 45;
+                speak-numeral: continuous;
+                speak-punctuation: none;
+            }
+            legend {
+                azimuth: far-left;
+                speech-rate: slower;
+            }
+        }
+
+        /* Стилі форми */
+        fieldset {
+            border: 1px solid #3498db;
+            background-color: #eaf2f8;
+            padding: 15px 20px;
+            margin-bottom: 18px;
+        }
+
+        legend.leg-style {
+            background-color: #2c3e50;
+            color: white;
+            padding: 5px 12px;
+            font-weight: bold;
+            font-variant: small-caps;
+        }
+
+        table.form-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.form-table td {
+            padding: 8px 6px;
+            vertical-align: top;
+        }
+
+        table.form-table td.lbl-col {
+            width: 38%;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        input[type="search"],
+        input[type="tel"],
+        input[type="password"],
+        input[type="month"],
+        input[type="datetime-local"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 96%;
+            padding: 6px 8px;
+            border: 1px solid #aaa;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background-color: #fff;
+        }
+
+        input[type="color"] {
+            width: 80px;
+            height: 32px;
+            padding: 2px;
+            border: 1px solid #aaa;
+            cursor: pointer;
+        }
+
+        /* Кнопки та сповіщення */
+        .btn-main {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-main:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-dark {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            background-color: #ccc;
+            color: #222;
+            border: none;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #statusBox {
+            display: none;
+            margin-top: 15px;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+        }
+
+        #statusBox.err {
+            display: block;
+            background-color: #fdecea;
+            border-color: #e74c3c;
+            color: #c0392b;
+        }
+
+        #statusBox.ok {
+            display: block;
+            background-color: #eafaf1;
+            border-color: #27ae60;
+            color: #1e8449;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка сторінки -->
+    <header style="background-color: #2c3e50; color: white; padding: 20px; text-align: center;">
+        <h1>Віртуальна фірма "Комп’ютерні аксесуари"</h1>
+        <p style="margin: 6px 0 0 0; color: #dcdde1;">Електронна форма замовлення товарів та комплектуючих</p>
+    </header>
+
+    <!-- Основний блок -->
+    <section style="width: 80%; margin: 20px auto; background-color: white; padding: 20px; border: 1px solid #ccc;">
+
+        <h2>Оформлення заявки на постачання товарів</h2>
+        <p>
+            Почніть вводити назву товару або виберіть потрібну позицію зі списку підказок.
+            Після натискання кнопки відправки система автоматично перевірить введені дані.
+        </p>
+
+        <p class="text-variant10-note">
+            Увага: поля, позначені червоною зірочкою (*), є обов’язковими для заповнення!
+        </p>
+
+        <!-- Форма замовлення -->
+        <form id="orderForm"
+              dir="ltr"
+              action="#"
+              method="post"
+              enctype="multipart/form-data"
+              accept="image/*,application/pdf"
+              novalidate>
+
+            <!-- Параметри товару -->
+            <fieldset>
+                <legend id="leg_products" class="leg-style" title="Вибір продукції підприємства">
+                    1. Інформація про товар фірми
+                </legend>
+
+                <table class="form-table">
+                    <!-- Пошук і вибір товару -->
+                    <tr>
+                        <td class="lbl-col">
+                            <label id="lbl_search" for="inp_search" form="orderForm" class="font-tahoma-demo">
+                                Товар з каталогу фірми <span style="color:red;">*</span>
+                            </label>
+                        </td>
+                        <td>
+                            <input type="search"
+                                   id="inp_search"
+                                   name="product_search"
+                                   list="catalog_datalist"
+                                   title="Оберіть товар зі списку або введіть назву для пошуку"
+                                   placeholder="Натисніть або введіть назву товару..."
+                                   oninput="updateTotal()"
+                                   required>
+                            <datalist id="catalog_datalist" dir="ltr" lang="uk">
+                                <option value="Механічна клавіатура RGB — 3450 грн">
+                                <option value="Бездротова ігрова миша Pro — 2199 грн">
+                                <option value="Гарнітура студійна USB 7.1 — 2890 грн">
+                                <option value="Веб-камера FullHD AutoFocus — 1750 грн">
+                            </datalist>
+
+                            <!-- Група опцій -->
+                            <select hidden aria-hidden="true">
+                                <optgroup id="grp_catalog" lang="uk" title="Каталог комп'ютерних аксесуарів">
+                                    <option value="3450">Механічна клавіатура RGB</option>
+                                </optgroup>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <!-- Кількість товару -->
+                    <tr>
+                        <td class="lbl-col">
+                            <label id="lbl_qty" for="inp_qty" form="orderForm" class="font-tahoma-demo">
+                                Кількість одиниць (макс. 500) <span style="color:red;">*</span>
+                            </label>
+                        </td>
+                        <td>
+                            <input type="number"
+                                   id="inp_qty"
+                                   name="product_qty"
+                                   min="1"
+                                   max="500"
+                                   step="1"
+                                   value="1"
+                                   title="Вкажіть кількість min:1 max:500"
+                                   oninput="updateTotal()"
+                                   required>
+                        </td>
+                    </tr>
+
+                    <!-- Колір товару -->
+                    <tr>
+                        <td class="lbl-col">
+                            <label id="lbl_color" for="inp_color" form="orderForm" class="font-fantasy-demo">
+                                Колір корпусу / підсвітки аксесуару:
+                            </label>
+                        </td>
+                        <td>
+                            <input type="color"
+                                   id="inp_color"
+                                   name="item_color"
+                                   value="#3498db"
+                                   title="Виберіть бажаний колір оформлення товару">
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+
+            <!-- Дані замовника та доставка -->
+            <fieldset>
+                <legend id="leg_client" class="leg-style" title="Контактні дані замовника та терміни відвантаження">
+                    2. Дані замовника та умови доставки
+                </legend>
+
+                <table class="form-table">
+                    <!-- Номер телефону -->
+                    <tr>
+                        <td class="lbl-col">
+                            <label id="lbl_tel" for="inp_tel" form="orderForm" class="font-tahoma-demo">
+                                Контактний телефон <span style="color:red;">*</span>
+                            </label>
+                        </td>
+                        <td>
+                            <input type="tel"
+                                   id="inp_tel"
+                                   name="client_phone"
+                                   pattern="^\+380\d{9}$"
+                                   placeholder="+380XXXXXXXXX"
+                                   title="Введіть номер у форматі +380XXXXXXXXX (12 цифр)"
+                                   required>
+                        </td>
+                    </tr>
+
+                    <!-- Пароль клієнта -->
+                    <tr>
+                        <td class="lbl-col">
+                            <label id="lbl_pass" for="inp_pass" form="orderForm" class="font-tahoma-demo">
+                                Пароль клієнта <span style="color:red;">*</span>
+                            </label>
+                        </td>
+                        <td>
+                            <input type="password"
+                                   id="inp_pass"
+                                   name="client_pass"
+                                   pattern="[A-Za-z0-9]{4,12}"
+                                   placeholder="4–12 латинських символів або цифр"
+                                   title="Код клієнта для активації знижки (від 4 до 12 символів)"
+                                   required>
+                        </td>
+                    </tr>
+
+                    <!-- Місяць постачання -->
+                    <tr>
+                        <td class="lbl-col">
+                            <label id="lbl_month" for="inp_month" form="orderForm" class="font-courier-demo">
+                                Місяць планового постачання:
+                            </label>
+                        </td>
+                        <td>
+                            <input type="month"
+                                   id="inp_month"
+                                   name="supply_month"
+                                   value="2026-11"
+                                   title="Оберіть місяць та рік відвантаження партії">
+                        </td>
+                    </tr>
+
+                    <!-- Дата та час доставки -->
+                    <tr>
+                        <td class="lbl-col">
+                            <label id="lbl_dt" for="inp_dt" form="orderForm" class="font-tahoma-demo">
+                                Дата та час доставки кур’єром <span style="color:red;">*</span>
+                            </label>
+                        </td>
+                        <td>
+                            <input type="datetime-local"
+                                   id="inp_dt"
+                                   name="delivery_datetime"
+                                   title="Оберіть бажані дату та час прибуття кур'єра"
+                                   required>
+                        </td>
+                    </tr>
+
+                    <!-- Адреса та коментар -->
+                    <tr>
+                        <td class="lbl-col">
+                            <label id="lbl_comment" for="txt_comment" form="orderForm" class="font-tahoma-demo">
+                                Адреса доставки та побажання <span style="color:red;">*</span>
+                            </label>
+                        </td>
+                        <td>
+                            <textarea id="txt_comment"
+                                      name="order_comment"
+                                      rows="3"
+                                      wrap="soft"
+                                      title="Вкажіть точну адресу доставки або коментар до замовлення"
+                                      placeholder="Вкажіть адресу доставки або додаткові побажання до комплектації..."
+                                      required></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+
+            <!-- Технічна інформація та ключ -->
+            <details style="background-color: #eee; padding: 10px 14px; border: 1px dashed #999; margin-bottom: 16px;"
+                     title="Технічний блок генерації ключа сесії"
+                     open>
+                <summary class="font-impact-demo">Технічна інформація та електронний ключ заявки</summary>
+                <p style="margin: 8px 0 4px 0;">
+                    Ключ захисту даних (<span class="font-courier-demo">HTML5 keygen</span>):
+                    <keygen name="order_keygen"
+                            lang="uk"
+                            style="margin-left: 8px;"
+                            title="Криптографічний ключ підтвердження заявки"
+                            disabled>
+                </p>
+                <small>На всі товари фірми надається офіційна гарантія та сервісна підтримка.</small>
+            </details>
+
+            <!-- Загальна вартість -->
+            <div style="background-color: #eaf2f8; border: 1px solid #3498db; padding: 12px 15px; margin-bottom: 18px;">
+                <strong>Загальна вартість замовлення: </strong>
+                <output class="font-courier-demo"
+                        lang="uk"
+                        for="inp_search inp_qty"
+                        title="Автоматично розрахована сума до сплати"
+                        id="out_total"
+                        style="font-size: 17px; font-weight: bold; color: #2c3e50;">0 грн</output>
+            </div>
+
+            <!-- Кнопки керування -->
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                <input type="submit"
+                       id="btn_submit"
+                       class="btn-main"
+                       value="Відправити інформацію"
+                       title="Перевірити поля та відправити замовлення">
+
+                <button type="button"
+                        name="btn_check"
+                        formenctype="application/x-www-form-urlencoded"
+                        formtarget="_self"
+                        class="btn-dark"
+                        onclick="checkFormData()"
+                        autofocus>
+                    Перевірити заповнення
+                </button>
+
+                <input type="reset"
+                       id="btn_reset"
+                       class="btn-reset"
+                       value="Очистити"
+                       title="Скинути всі введені дані"
+                       onclick="clearStatus()">
+
+                <!-- Графічна кнопка -->
+                <div style="margin-left: auto; display: flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 13px;">Швидке замовлення:</span>
+                    <input type="image"
+                           id="btn_img_submit"
+                           src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='115' height='36' viewBox='0 0 115 36'><rect width='115' height='36' fill='%233498db'/><text x='57' y='22' font-family='Arial' font-size='13' font-weight='bold' fill='white' text-anchor='middle'>Купити в 1 клік</text></svg>"
+                           alt="Графічна кнопка швидкого замовлення"
+                           title="Надіслати швидке замовлення"
+                           height="36"
+                           formaction="#"
+                           formmethod="post"
+                           formenctype="text/plain"
+                           formtarget="_self">
+                </div>
+            </div>
+
+            <!-- Повідомлення валідації -->
+            <div id="statusBox"></div>
+        </form>
+
+    </section>
+
+    <!-- Підвал сторінки -->
+    <footer style="background-color: #2c3e50; color: white; text-align: center; padding: 15px; width: 80%; margin: 0 auto;">
+        <h3>Наші контакти</h3>
+        <address lang="uk" class="address-style">
+            м. Чернівці, вул. Неіснуюча 67<br>
+            Email: shop@it-access.cv.ua
+        </address>
+
+        <p style="font-size: 12px; color: #aaa; margin-top: 15px;">
+            &copy; 2026 Чернівці. Андрій Максимюк. Лабораторна робота №5 (Варіант 10).
+        </p>
+    </footer>
+
+    <script>
+        // Розрахунок вартості замовлення
+        function getSelectedPrice() {
+            const val = document.getElementById('inp_search').value;
+            const match = val.match(/(\d+)\s*грн/i);
+            return match ? parseInt(match[1], 10) : 0;
+        }
+
+        function updateTotal() {
+            const price = getSelectedPrice();
+            const qty = parseInt(document.getElementById('inp_qty').value, 10) || 0;
+            const total = price * qty;
+            document.getElementById('out_total').textContent = total.toLocaleString('uk-UA') + ' грн';
+        }
+
+        // Очищення повідомлень
+        function clearStatus() {
+            const box = document.getElementById('statusBox');
+            box.className = '';
+            box.style.display = 'none';
+            box.innerHTML = '';
+            setTimeout(updateTotal, 10);
+        }
+
+        // Перевірка введених даних
+        function checkFormData() {
+            const box = document.getElementById('statusBox');
+            const errors = [];
+
+            const searchVal = document.getElementById('inp_search').value.trim();
+            const qtyVal = Number(document.getElementById('inp_qty').value);
+            const telVal = document.getElementById('inp_tel').value.trim();
+            const passVal = document.getElementById('inp_pass').value.trim();
+            const dtVal = document.getElementById('inp_dt').value;
+            const commentVal = document.getElementById('txt_comment').value.trim();
+
+            if (searchVal === '') {
+                errors.push('Поле "Товар з каталогу фірми" не може бути порожнім.');
+            }
+            if (!Number.isInteger(qtyVal) || qtyVal < 1 || qtyVal > 100) {
+                errors.push('Кількість одиниць має бути цілим числом від 1 до 100.');
+            }
+            if (!/^\+380\d{9}$/.test(telVal)) {
+                errors.push('Телефон має відповідати формату +380XXXXXXXXX (наприклад, +380501234567).');
+            }
+            if (!/^[A-Za-z0-9]{4,12}$/.test(passVal)) {
+                errors.push('Промокод / пароль клієнта повинен містити від 4 до 12 латинських літер або цифр.');
+            }
+            if (dtVal === '') {
+                errors.push('Не вказано бажану дату та час доставки.');
+            }
+            if (commentVal.length < 5) {
+                errors.push('Заповніть адресу доставки та побажання (мінімум 5 символів).');
+            }
+
+            if (errors.length > 0) {
+                box.className = 'err';
+                box.innerHTML = '<strong>Виявлено помилки при заповненні форми:</strong><ul style="margin: 6px 0 0 20px;">' +
+                    errors.map(e => '<li>' + e + '</li>').join('') + '</ul>';
+                return false;
+            }
+
+            const totalSum = document.getElementById('out_total').textContent;
+            const dtDisplay = dtVal.replace('T', ' ');
+
+            box.className = 'ok';
+            box.innerHTML = '<strong>Форму успішно перевірено та прийнято!</strong><br>' +
+                'Обраний товар: <b>' + searchVal + '</b> (' + qtyVal + ' шт.)<br>' +
+                'Загальна сума: <b>' + totalSum + '</b> | Доставка: <b>' + dtDisplay + '</b><br>' +
+                'Телефон замовника: <b>' + telVal + '</b>';
+            return true;
+        }
+
+        // Обробка відправки форми
+        document.getElementById('orderForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            checkFormData();
+        });
+    </script>
+
+</body>
+</html>
